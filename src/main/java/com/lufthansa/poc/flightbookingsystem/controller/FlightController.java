@@ -1,13 +1,12 @@
 package com.lufthansa.poc.flightbookingsystem.controller;
 
-import com.lufthansa.poc.flightbookingsystem.dto.ResponseDto;
 import com.lufthansa.poc.flightbookingsystem.dto.FlightDto;
+import com.lufthansa.poc.flightbookingsystem.dto.ResponseDto;
 import com.lufthansa.poc.flightbookingsystem.service.IFlightService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

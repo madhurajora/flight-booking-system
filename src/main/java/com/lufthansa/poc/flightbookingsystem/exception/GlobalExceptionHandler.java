@@ -81,6 +81,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponseDto> handleBadCredentialsException(BadCredentialsException exception, WebRequest webRequest){
+        ErrorResponseDto errorResponse = new ErrorResponseDto();
+        errorResponse.setApiPath(webRequest.getDescription(false));
+        errorResponse.setErrorMessage(exception.getMessage());
+        errorResponse.setErrorCode(HttpStatus.BAD_REQUEST);
+        errorResponse.setErrorTime(LocalDateTime.now());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedUserNotAllowedToUpdateException.class)
+    public ResponseEntity<ErrorResponseDto> handleUnauthorizedUserNotAllowedToUpdateException(UnauthorizedUserNotAllowedToUpdateException exception, WebRequest webRequest){
+        ErrorResponseDto errorResponse = new ErrorResponseDto();
+        errorResponse.setApiPath(webRequest.getDescription(false));
+        errorResponse.setErrorMessage(exception.getMessage());
+        errorResponse.setErrorCode(HttpStatus.UNAUTHORIZED);
+        errorResponse.setErrorTime(LocalDateTime.now());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

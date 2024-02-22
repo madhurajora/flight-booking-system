@@ -3,6 +3,7 @@ package com.lufthansa.poc.flightbookingsystem.service;
 import com.lufthansa.poc.flightbookingsystem.constants.FlightConstants;
 import com.lufthansa.poc.flightbookingsystem.dto.UserDto;
 import com.lufthansa.poc.flightbookingsystem.entity.Flight;
+import com.lufthansa.poc.flightbookingsystem.entity.Roles;
 import com.lufthansa.poc.flightbookingsystem.entity.UserEntity;
 import com.lufthansa.poc.flightbookingsystem.exception.UserAlreadyExistsException;
 import com.lufthansa.poc.flightbookingsystem.exception.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import com.lufthansa.poc.flightbookingsystem.mapper.UserMapper;
 import com.lufthansa.poc.flightbookingsystem.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements IUserService{
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
     
     @Override
     public String createUser(UserDto userDto) {
@@ -32,8 +35,10 @@ public class UserServiceImpl implements IUserService{
         if(userFromDB!=null){
             throw new UserAlreadyExistsException("User with emailId "+user.getEmail()+" already exists!");
         }
+        user.setRole(new Roles(2));
         user.setCreatedAt(LocalDateTime.now());
         user.setCreatedBy(FlightConstants.ANONYMOUS);
+        user.setPwd(passwordEncoder.encode(user.getPwd()));
         userRepository.save(user);
         log.info("Inside createUser(), New User created : {} "+userDto);
         return user.getEmail();

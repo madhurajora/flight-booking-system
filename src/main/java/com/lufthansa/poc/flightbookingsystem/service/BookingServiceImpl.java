@@ -7,11 +7,14 @@ import com.lufthansa.poc.flightbookingsystem.entity.Flight;
 import com.lufthansa.poc.flightbookingsystem.exception.FlightNotFoundException;
 import com.lufthansa.poc.flightbookingsystem.exception.NoSeatAvailableException;
 import com.lufthansa.poc.flightbookingsystem.exception.ResourceNotFoundException;
+import com.lufthansa.poc.flightbookingsystem.exception.UnauthorizedUserNotAllowedToUpdateException;
 import com.lufthansa.poc.flightbookingsystem.mapper.BookingMapper;
 import com.lufthansa.poc.flightbookingsystem.repository.BookingRepository;
 import com.lufthansa.poc.flightbookingsystem.repository.FlightRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -31,6 +34,10 @@ public class BookingServiceImpl implements IBookingService{
 
     @Override
     public long createBooking(BookingDto bookingDto) {
+        String currentLoggedInUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(!bookingDto.getEmail().equals(currentLoggedInUser)){
+            throw new UnauthorizedUserNotAllowedToUpdateException("User not allowed to book a flight");
+        }
         log.debug("Inside createBooking(BookingDto bookingDto), Start creating booking for user {} : "+bookingDto.getEmail());
         Booking booking = BookingMapper.mapToBooking(bookingDto, new Booking());
 

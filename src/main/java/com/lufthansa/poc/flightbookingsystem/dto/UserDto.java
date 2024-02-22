@@ -1,5 +1,8 @@
 package com.lufthansa.poc.flightbookingsystem.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -21,4 +24,10 @@ public class UserDto {
     @NotBlank(message="Address must not be blank")
     @Size(min=3, message="Address must be at least 3 characters long")
     private String address;
+
+    @JsonProperty(access= JsonProperty.Access.WRITE_ONLY)
+    private String pwd;
+
+    @JsonIgnore
+    private int roleId;
 }
