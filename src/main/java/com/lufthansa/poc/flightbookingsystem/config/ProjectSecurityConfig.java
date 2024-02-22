@@ -19,6 +19,8 @@ public class ProjectSecurityConfig {
                 .authorizeHttpRequests((req) ->
                         req
                                 .requestMatchers(HttpMethod.POST,"/api/user").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/api-docs/**").permitAll()
                                 .requestMatchers("/api/user/**").hasAnyRole("USER","ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/flight").permitAll()
                                 .requestMatchers("/api/flight/**").hasRole("ADMIN")
