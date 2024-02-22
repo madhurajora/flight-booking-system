@@ -5,6 +5,7 @@ import com.lufthansa.poc.flightbookingsystem.dto.UserDto;
 import com.lufthansa.poc.flightbookingsystem.entity.Flight;
 import com.lufthansa.poc.flightbookingsystem.entity.Roles;
 import com.lufthansa.poc.flightbookingsystem.entity.UserEntity;
+import com.lufthansa.poc.flightbookingsystem.exception.UnauthorizedUserNotAllowedToUpdateException;
 import com.lufthansa.poc.flightbookingsystem.exception.UserAlreadyExistsException;
 import com.lufthansa.poc.flightbookingsystem.exception.ResourceNotFoundException;
 import com.lufthansa.poc.flightbookingsystem.mapper.FlightMapper;
@@ -12,6 +13,7 @@ import com.lufthansa.poc.flightbookingsystem.mapper.UserMapper;
 import com.lufthansa.poc.flightbookingsystem.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -57,9 +59,10 @@ public class UserServiceImpl implements IUserService{
     public boolean updateUserDetails(UserDto userDto) {
         boolean isUpdated = false;
         UserEntity user = UserMapper.mapToUser(userDto, new UserEntity());
-        user.setEmail(userDto.getEmail());
+        user.setPwd(passwordEncoder.encode(user.getPwd()));
         user.setUpdatedAt(LocalDateTime.now());
         user.setUpdatedBy("UpdatedByAnonymous");
+        user.setRole(new Roles(2));
         UserEntity savedUser = userRepository.save(user);
         if(!ObjectUtils.isEmpty(savedUser)) {
             isUpdated = true;
